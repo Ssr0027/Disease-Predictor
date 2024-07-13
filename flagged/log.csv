@@ -1,0 +1,15 @@
+Select Symptom 1,Select Symptom 2,Select Symptom 3,output,flag,username,timestamp
+skin_rash,continuous_sneezing,shivering,"<h2>Predicted Disease: Allergy</h2>
+<p>RF Model Prediction: Allergy</p>
+<p>Naive Bayes Prediction: Allergy</p>
+<p>SVM Model Prediction: Allergy</p>",,,2024-07-07 11:19:15.552811
+,,,,,,2024-07-07 11:25:17.528653
+,,,,,,2024-07-07 11:25:20.081119
+skin_rash,skin_rash,skin_rash,"<h2>Predicted Disease: Acne</h2>
+<p>RF Model Prediction: Acne</p>
+<p>Naive Bayes Prediction: Acne</p>
+<p>SVM Model Prediction: Fungal infection</p>",,,2024-07-07 11:25:32.865035
+skin_rash,cramps,yellow_urine,"<h2><i class=""fa-solid fa-user-doctor""></i> Predicted Disease: Acne</h2>
+                   <p>RF Model Prediction: Varicose veins</p>
+                   <p>Naive Bayes Prediction: Acne</p>
+                   <p>SVM Model Prediction: Acne</p>",,,2024-07-07 15:34:37.182599
