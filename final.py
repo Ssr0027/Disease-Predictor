@@ -9,7 +9,7 @@ import csv
 import os
 
 # Load the data
-DATA_PATH = "/Users/shubham/Desktop/DiseasePredictor/Training.csv"
+DATA_PATH = "https://github.com/Ssr0027/Disease-Predictor/blob/main/Training.csv"
 data = pd.read_csv(DATA_PATH).dropna(axis=1)
 
 # Data preprocessing
