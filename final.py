@@ -7,10 +7,17 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 import csv
 import os
+import requests
+from io import StringIO
 
-# Load the data
-DATA_PATH = "https://github.com/Ssr0027/Disease-Predictor/blob/main/Training.csv"
-data = pd.read_csv(DATA_PATH).dropna(axis=1)
+# Load the data from Google Drive
+file_id = '1udpZDVUa_vnvHdKxTCKrNvh3ClIdv5as'  # Replace with your file ID from Google Drive
+DOWNLOAD_URL = f'https://drive.google.com/uc?export=download&id={file_id}'
+
+# Download and load the data
+response = requests.get(DOWNLOAD_URL)
+csv_data = StringIO(response.text)
+data = pd.read_csv(csv_data).dropna(axis=1)
 
 # Data preprocessing
 encoder = LabelEncoder()
@@ -37,7 +44,7 @@ data_dict = {
 }
 
 # Ensure flagged data file exists
-FLAGGED_DATA_PATH = "/Users/shubham/Desktop/DiseasePredictor/flagged_data.csv"
+FLAGGED_DATA_PATH = "flagged_data.csv"
 if not os.path.exists(FLAGGED_DATA_PATH):
     with open(FLAGGED_DATA_PATH, mode='w') as file:
         writer = csv.writer(file)
@@ -82,10 +89,24 @@ def predict_disease(symptom1, symptom2, symptom3, flag=False):
     }
 
 # Streamlit app
-def main():
-    st.title("Disease Predictor")
+st.title("Disease Predictor")
+st.markdown("---")
 
-    # Create dropdowns for symptoms
+# Sidebar for additional controls
+with st.sidebar:
+    st.title("Customize Interface")
+    st.markdown("### Personalize your experience")
+
+    # Example of a slider for customization
+    st.markdown("#### Adjust Font Size")
+    font_size = st.slider("Select Font Size", min_value=10, max_value=30, step=2, value=14)
+
+# Main content area
+st.header("Predict Disease")
+
+# Create dropdowns for symptoms
+with st.form("symptoms_form"):
+    st.write("### Enter Symptoms")
     symptom1 = st.selectbox("Select Symptom 1", symptoms)
     symptom2 = st.selectbox("Select Symptom 2", symptoms)
     symptom3 = st.selectbox("Select Symptom 3", symptoms)
@@ -94,15 +115,35 @@ def main():
     flag = st.checkbox("Flag this record")
 
     # Prediction button
-    if st.button("Predict"):
-        result = predict_disease(symptom1, symptom2, symptom3, flag)
-        if isinstance(result, str):
-            st.error(result)  # Show error message if not all symptoms are filled
-        else:
-            st.markdown(f"### Predicted Disease: **{result['final_prediction']}**")
-            st.markdown(f"**RF Model Prediction:** {result['rf_model_prediction']}")
-            st.markdown(f"**Naive Bayes Prediction:** {result['naive_bayes_prediction']}")
-            st.markdown(f"**SVM Model Prediction:** {result['svm_model_prediction']}")
+    predict_button = st.form_submit_button("Predict Disease")
 
-if __name__ == "__main__":
-    main()
+# Display predictions
+if predict_button:
+    result = predict_disease(symptom1, symptom2, symptom3, flag)
+    if isinstance(result, str):
+        st.error(result)  # Show error message if not all symptoms are filled
+    else:
+        st.markdown(f"### Predicted Disease: **{result['final_prediction']}**")
+        st.markdown(f"**RF Model Prediction:** {result['rf_model_prediction']}")
+        st.markdown(f"**Naive Bayes Prediction:** {result['naive_bayes_prediction']}")
+        st.markdown(f"**SVM Model Prediction:** {result['svm_model_prediction']}")
+
+# Custom CSS to change the interface appearance
+st.markdown(
+    f"""
+    <style>
+        body {{
+            font-size: {font_size}px;
+            color: #333;
+        }}
+        .sidebar .sidebar-content {{
+            background-color: #f0f0f0;
+            padding: 20px;
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# To run the Streamlit app, use the following command in your terminal:
+# streamlit run app.py
